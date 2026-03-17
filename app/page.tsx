@@ -1,32 +1,18 @@
 "use client"
 
 import type React from "react"
-import { MapPin, Building2, Handshake, Award } from "lucide-react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { ChevronDown, Phone } from "lucide-react"
+import { LoginDialog } from "@/components/login-dialog"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { useRouter } from "next/navigation"
+import { ChevronDown } from "lucide-react"
+import { SiteHeader } from "@/components/site/SiteHeader"
+import { SiteFooter } from "@/components/site/SiteFooter"
 
 export default function Home() {
   const [showLogin, setShowLogin] = useState(false)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const router = useRouter()
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("[v0] Login attempt with:", email)
-    // Simple demo authentication - save to localStorage
-    if (email && password) {
-      localStorage.setItem("dmarcos_auth", "true")
-      console.log("[v0] Auth saved to localStorage, navigating to /processos")
-      router.push("/processos")
-    }
-  }
+  // O login agora é feito pelo LoginDialog
 
   const scrollToServices = () => {
     const servicesSection = document.getElementById("servicos")
@@ -37,29 +23,22 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <img src="/images/logo.png" alt="Dmarcos - Desde 1986" className="h-10" />
-          </div>
-
-          <a
-            href="tel:+559221213100"
-            className="flex items-center gap-2 text-accent hover:text-accent/80 transition-colors"
-          >
-            <Phone className="w-5 h-5" />
-            <span className="font-semibold">+55 92 2121.3100</span>
-          </a>
-        </div>
-      </header>
+      <SiteHeader onLoginClick={() => setShowLogin(true)} />
 
       {/* Hero Section with Login */}
-      <section className="bg-gradient-to-br from-primary via-primary to-accent/20 text-primary-foreground py-20 md:py-32">
-        <div className="container mx-auto px-4">
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-accent/20 text-primary-foreground">
+        <div className="absolute inset-0 opacity-25">
+          <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-accent blur-3xl" />
+          <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-primary-foreground/20 blur-3xl" />
+        </div>
+
+        <div className="page-container relative py-20 md:py-28">
           <div className="grid md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
             {/* Left side - Tagline and description */}
             <div>
+              <p className="inline-flex items-center gap-2 text-xs font-semibold tracking-wide uppercase text-primary-foreground/80 mb-4">
+                Desde 1986 • Manaus/AM
+              </p>
               <h1 className="text-4xl md:text-6xl font-bold mb-6 text-balance">
                 Dmarcos, <span className="text-accent">A EMPRESA QUE RESOLVE</span>
               </h1>
@@ -80,64 +59,28 @@ export default function Home() {
                   size="lg"
                   onClick={() => setShowLogin(!showLogin)}
                   variant="outline"
-                  className="border-2 border-accent text-accent hover:bg-accent hover:text-accent-foreground font-semibold"
+                  className="border-primary text-primary hover:bg-primary hover:text-white font-semibold transition-colors"
                 >
-                  Faça Login 
+                  Área do Cliente
                 </Button>
               </div>
             </div>
 
             {/* Right side - Login form (conditional) */}
-            {showLogin && (
-              <div className="flex justify-center md:justify-end">
-                <Card className="w-full max-w-md">
-                  <CardHeader>
-                    <CardTitle>Login do Sistema</CardTitle>
-                    <CardDescription>Acesse a consulta de processos</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form onSubmit={handleLogin} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          placeholder="seu@email.com"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="password">Senha</Label>
-                        <Input
-                          id="password"
-                          type="password"
-                          placeholder="••••••••"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          required
-                        />
-                      </div>
-                      <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-                        Entrar
-                      </Button>
-                    </form>
-                  </CardContent>
-                </Card>
-              </div>
-            )}
+            <LoginDialog open={showLogin} onOpenChange={setShowLogin} />
           </div>
         </div>
       </section>
 
-      <section className="py-16 md:py-24 bg-background">
-        <div className="container mx-auto px-4">
+      <section className="section bg-background">
+        <div className="page-container">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">A Dmarcos</h2>
-            <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
+            <div className="text-center">
+              <h2 className="section-title">A Dmarcos</h2>
+              <p className="section-subtitle mb-12 max-w-2xl mx-auto">
               Conheça nossa estrutura e compromisso com a excelência em serviços aduaneiros
-            </p>
+              </p>
+            </div>
 
             <div className="grid md:grid-cols-2 gap-8">
               {/* Localização */}
@@ -226,8 +169,8 @@ export default function Home() {
       </section>
 
       <section id="servicos" className="py-16 md:py-24 bg-secondary/30">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Nossos Serviços</h2>
+        <div className="page-container">
+          <h2 className="section-title mb-12 text-center">Nossos Serviços</h2>
 
           <div className="max-w-4xl mx-auto space-y-4">
             {/* IMPORTAÇÃO */}
@@ -244,7 +187,7 @@ export default function Home() {
               <CollapsibleContent className="px-6 pt-4 pb-6">
                 <div className="flex flex-col md:flex-row gap-6">
                   <img
-                    src="/cargo-containers-port-shipping-logistics.jpg"
+                    src="/images/cargo-containers-port-shipping-logistics.jpg"
                     alt="Importação"
                     className="w-full md:w-64 h-48 object-cover rounded-lg"
                   />
@@ -273,7 +216,7 @@ export default function Home() {
               <CollapsibleContent className="px-6 pt-4 pb-6">
                 <div className="flex flex-col md:flex-row gap-6">
                   <img
-                    src="/cargo-airplane-airport-export-international-shippi.jpg"
+                    src="/images/cargo-airplane-airport-export-international-shippi.jpg"
                     alt="Exportação"
                     className="w-full md:w-64 h-48 object-cover rounded-lg"
                   />
@@ -300,7 +243,7 @@ export default function Home() {
               <CollapsibleContent className="px-6 pt-4 pb-6">
                 <div className="flex flex-col md:flex-row gap-6">
                   <img
-                    src="/warehouse-logistics-cargo-management-distribution.jpg"
+                    src="/images/warehouse-logistics-cargo-management-distribution.jpg"
                     alt="Agenciamento de Carga"
                     className="w-full md:w-64 h-48 object-cover rounded-lg"
                   />
@@ -330,7 +273,7 @@ export default function Home() {
               <CollapsibleContent className="px-6 pt-4 pb-6">
                 <div className="flex flex-col md:flex-row gap-6">
                   <img
-                    src="/customs-documents-paperwork-international-trade.jpg"
+                    src="/images/customs-documents-paperwork-international-trade.jpg"
                     alt="Internação"
                     className="w-full md:w-64 h-48 object-cover rounded-lg"
                   />
@@ -357,7 +300,7 @@ export default function Home() {
               <CollapsibleContent className="px-6 pt-4 pb-6">
                 <div className="flex flex-col md:flex-row gap-6">
                   <img
-                    src="/business-consultation-meeting-professional-advisor.jpg"
+                    src="/images/business-consultation-meeting-professional-advisor.jpg"
                     alt="Consultoria"
                     className="w-full md:w-64 h-48 object-cover rounded-lg"
                   />
@@ -373,16 +316,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="bg-primary text-primary-foreground py-12 mt-auto">
-        <div className="container mx-auto px-4 text-center">
-          <h3 className="font-bold text-lg mb-2">MARCOS DESPACHOS ADUANEIROS LTDA</h3>
-          <p className="text-sm text-primary-foreground/80 mb-1">
-            Rua Costa Azevedo, 250, Centro, Manaus, AM, Brasil, 69010-230
-          </p>
-          <p className="text-sm text-primary-foreground/80">TEL: +55 92 2121.3100 | CNPJ: 10.198.034/0001-96</p>
-          <p className="text-xs text-primary-foreground/60 mt-6">© 2025 Dmarcos - Todos os direitos reservados.</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   )
 }

@@ -1,30 +1,6 @@
-"use client"
-
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { LogOut, Search, ArrowLeft } from "lucide-react"
-import { SearchForm, type SearchParams } from "@/components/processos/search-form"
-import { ProcessTable } from "@/components/processos/process-table"
-import { ProcessDetail } from "@/components/processos/process-detail"
 import type { Processo } from "@/lib/mock-processos"
-import { Building2 } from "lucide-react"
 
-type View = "search" | "results" | "detail"
-
-type ClienteSession = { nomeEmpresa?: string; cnpj?: string }
-
-function readClienteSession(): ClienteSession | null {
-  try {
-    const raw = localStorage.getItem("dmarcos_cliente")
-    if (!raw) return null
-    return JSON.parse(raw) as ClienteSession
-  } catch {
-    return null
-  }
-}
-
-function mapRowToProcesso(row: any): Processo {
+export function mapRowToProcesso(row: any): Processo {
   const pick = (...keys: string[]) => {
     for (const k of keys) {
       if (row?.[k] !== undefined && row?.[k] !== null) return row[k]
@@ -100,12 +76,3 @@ function mapRowToProcesso(row: any): Processo {
   }
 }
 
-export default function ProcessosPage() {
-  const router = useRouter()
-
-  useEffect(() => {
-    router.replace("/consultas/di-registradas")
-  }, [router])
-
-  return null
-}
