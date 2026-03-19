@@ -66,8 +66,26 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right side - Login form (conditional) */}
-            <LoginDialog open={showLogin} onOpenChange={setShowLogin} />
+            {/* Right side - Hero visuals + Login */}
+            <div className="relative">
+              <div className="absolute right-0 top-4 w-64 h-64 rounded-3xl overflow-hidden shadow-xl border border-border/50">
+                <img
+                  src="/images/teatro-amazonas.jpg"
+                  alt="Teatro Amazonas - Manaus"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="absolute left-0 bottom-0 w-56 h-56 rounded-3xl overflow-hidden shadow-xl border border-border/50">
+                <img
+                  src="/images/customs-documents-paperwork-international-trade.jpg"
+                  alt="Documentos aduaneiros"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="relative z-10">
+                <LoginDialog open={showLogin} onOpenChange={setShowLogin} />
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -127,8 +145,8 @@ export default function Home() {
               <div className="group relative rounded-2xl bg-card border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                 <div className="h-48 overflow-hidden">
                   <img 
-                    src="/images/port-workers-cargo.jpg" 
-                    alt="Equipe acompanhando cargas no porto" 
+                    src="/images/customs-documents-paperwork-international-trade.jpg" 
+                    alt="Documentos aduaneiros e liberação de processos" 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
