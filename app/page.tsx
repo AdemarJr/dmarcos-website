@@ -12,6 +12,24 @@ import { SiteFooter } from "@/components/site/SiteFooter"
 export default function Home() {
   const [showLogin, setShowLogin] = useState(false)
 
+  const basePath = (process.env.NEXT_PUBLIC_BASE_PATH ?? "").replace(/\/$/, "")
+  const assetUrl = (path: string) => {
+    const normalizedPath = path.startsWith("/") ? path : `/${path}`
+    return basePath ? `${basePath}${normalizedPath}` : normalizedPath
+  }
+
+  /** Todas as imagens da home vêm de `public/images/` */
+  const img = {
+    teatroAmazonas: "/images/imagens-aereas-do-teatro-amazonas-em-4k-uhd.jpg",
+    desembaraco: "/images/desembaraco-aduaneiro-capa.jpg",
+    porto: "/images/port-workers-cargo.png",
+    aviao: "/images/transporte-aduaneiro-aviao.jpeg",
+    armazenamento: "/images/aduana-amazenamento.jpeg",
+    galeria1: "/images/images01.jpeg",
+    galeria2: "/images/images02.jpeg",
+    galeria3: "/images/images03.jpeg",
+  } as const
+
   // O login agora é feito pelo LoginDialog
 
   const scrollToServices = () => {
@@ -67,25 +85,6 @@ export default function Home() {
             </div>
 
             {/* Right side - Hero visuals + Login */}
-            <div className="relative">
-              <div className="absolute right-0 top-4 w-64 h-64 rounded-3xl overflow-hidden shadow-xl border border-border/50">
-                <img
-                  src="/images/teatro-amazonas.jpg"
-                  alt="Teatro Amazonas - Manaus"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="absolute left-0 bottom-0 w-56 h-56 rounded-3xl overflow-hidden shadow-xl border border-border/50">
-                <img
-                  src="/images/customs-documents-paperwork-international-trade.jpg"
-                  alt="Documentos aduaneiros"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="relative z-10">
-                <LoginDialog open={showLogin} onOpenChange={setShowLogin} />
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -105,7 +104,7 @@ export default function Home() {
               <div className="group relative rounded-2xl bg-card border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                 <div className="h-48 overflow-hidden">
                   <img 
-                    src="/images/teatro-amazonas.jpg" 
+                    src={assetUrl(img.teatroAmazonas)} 
                     alt="Teatro Amazonas - Manaus" 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
@@ -125,8 +124,8 @@ export default function Home() {
               <div className="group relative rounded-2xl bg-card border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                 <div className="h-48 overflow-hidden">
                   <img 
-                    src="/images/modern-office-technology.jpg" 
-                    alt="Escritório moderno com tecnologia" 
+                    src={assetUrl(img.galeria1)} 
+                    alt="Estrutura e operação" 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
@@ -145,8 +144,8 @@ export default function Home() {
               <div className="group relative rounded-2xl bg-card border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                 <div className="h-48 overflow-hidden">
                   <img 
-                    src="/images/customs-documents-paperwork-international-trade.jpg" 
-                    alt="Documentos aduaneiros e liberação de processos" 
+                    src={assetUrl(img.porto)} 
+                    alt="Acompanhamento em portos e terminais" 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
@@ -165,7 +164,7 @@ export default function Home() {
               <div className="group relative rounded-2xl bg-card border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                 <div className="h-48 overflow-hidden">
                   <img 
-                    src="/images/business-handshake-partnership.jpg" 
+                    src={assetUrl(img.galeria2)} 
                     alt="Parceria e assessoria empresarial" 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
@@ -195,7 +194,7 @@ export default function Home() {
             <Collapsible>
               <CollapsibleTrigger className="w-full flex items-center gap-4 p-6 rounded-lg border bg-card hover:bg-secondary/50 transition-colors group">
                 <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
-                  <img src="/import-customs-shipping-container.jpg" alt="" className="w-8 h-8" />
+                  <img src={assetUrl(img.desembaraco)} alt="" className="w-8 h-8 object-cover rounded" />
                 </div>
                 <div className="flex-1 text-left">
                   <h3 className="font-semibold text-foreground text-lg">IMPORTAÇÃO | Diferencial é a palavra-chave</h3>
@@ -205,7 +204,7 @@ export default function Home() {
               <CollapsibleContent className="px-6 pt-4 pb-6">
                 <div className="flex flex-col md:flex-row gap-6">
                   <img
-                    src="/images/cargo-containers-port-shipping-logistics.jpg"
+                    src={assetUrl(img.porto)}
                     alt="Importação"
                     className="w-full md:w-64 h-48 object-cover rounded-lg"
                   />
@@ -224,7 +223,7 @@ export default function Home() {
             <Collapsible>
               <CollapsibleTrigger className="w-full flex items-center gap-4 p-6 rounded-lg border bg-card hover:bg-secondary/50 transition-colors group">
                 <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
-                  <img src="/airplane-cargo-export-flight.jpg" alt="" className="w-8 h-8" />
+                  <img src={assetUrl(img.aviao)} alt="" className="w-8 h-8 object-cover rounded" />
                 </div>
                 <div className="flex-1 text-left">
                   <h3 className="font-semibold text-foreground text-lg">EXPORTAÇÃO | Atendimento 24h</h3>
@@ -234,7 +233,7 @@ export default function Home() {
               <CollapsibleContent className="px-6 pt-4 pb-6">
                 <div className="flex flex-col md:flex-row gap-6">
                   <img
-                    src="/images/cargo-airplane-airport-export-international-shippi.jpg"
+                    src={assetUrl(img.aviao)}
                     alt="Exportação"
                     className="w-full md:w-64 h-48 object-cover rounded-lg"
                   />
@@ -251,7 +250,7 @@ export default function Home() {
             <Collapsible>
               <CollapsibleTrigger className="w-full flex items-center gap-4 p-6 rounded-lg border bg-card hover:bg-secondary/50 transition-colors group">
                 <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
-                  <img src="/truck-logistics-delivery.jpg" alt="" className="w-8 h-8" />
+                  <img src={assetUrl(img.armazenamento)} alt="" className="w-8 h-8 object-cover rounded" />
                 </div>
                 <div className="flex-1 text-left">
                   <h3 className="font-semibold text-foreground text-lg">AG. DE CARGA | Solução do início ao fim</h3>
@@ -261,7 +260,7 @@ export default function Home() {
               <CollapsibleContent className="px-6 pt-4 pb-6">
                 <div className="flex flex-col md:flex-row gap-6">
                   <img
-                    src="/images/warehouse-logistics-cargo-management-distribution.jpg"
+                    src={assetUrl(img.armazenamento)}
                     alt="Agenciamento de Carga"
                     className="w-full md:w-64 h-48 object-cover rounded-lg"
                   />
@@ -281,7 +280,7 @@ export default function Home() {
             <Collapsible>
               <CollapsibleTrigger className="w-full flex items-center gap-4 p-6 rounded-lg border bg-card hover:bg-secondary/50 transition-colors group">
                 <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
-                  <img src="/world-map-global-network.jpg" alt="" className="w-8 h-8" />
+                  <img src={assetUrl(img.galeria3)} alt="" className="w-8 h-8 object-cover rounded" />
                 </div>
                 <div className="flex-1 text-left">
                   <h3 className="font-semibold text-foreground text-lg">INTERNAÇÃO | Experiência e envolvimento</h3>
@@ -291,7 +290,7 @@ export default function Home() {
               <CollapsibleContent className="px-6 pt-4 pb-6">
                 <div className="flex flex-col md:flex-row gap-6">
                   <img
-                    src="/images/customs-documents-paperwork-international-trade.jpg"
+                    src={assetUrl(img.desembaraco)}
                     alt="Internação"
                     className="w-full md:w-64 h-48 object-cover rounded-lg"
                   />
@@ -308,7 +307,7 @@ export default function Home() {
             <Collapsible>
               <CollapsibleTrigger className="w-full flex items-center gap-4 p-6 rounded-lg border bg-card hover:bg-secondary/50 transition-colors group">
                 <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
-                  <img src="/document-checklist-clipboard.jpg" alt="" className="w-8 h-8" />
+                  <img src={assetUrl(img.galeria1)} alt="" className="w-8 h-8 object-cover rounded" />
                 </div>
                 <div className="flex-1 text-left">
                   <h3 className="font-semibold text-foreground text-lg">CONSULTORIA TÉCNICA E CLASSIFICAÇÃO FISCAL</h3>
@@ -318,7 +317,7 @@ export default function Home() {
               <CollapsibleContent className="px-6 pt-4 pb-6">
                 <div className="flex flex-col md:flex-row gap-6">
                   <img
-                    src="/images/business-consultation-meeting-professional-advisor.jpg"
+                    src={assetUrl(img.galeria3)}
                     alt="Consultoria"
                     className="w-full md:w-64 h-48 object-cover rounded-lg"
                   />
