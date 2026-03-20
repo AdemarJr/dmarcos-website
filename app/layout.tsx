@@ -7,20 +7,19 @@ import "./globals.css"
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
+const basePath = (process.env.NEXT_PUBLIC_BASE_PATH ?? "").replace(/\/$/, "")
+const faviconUrl = `${basePath}/favicon.png`
+
 export const metadata: Metadata = {
   // <CHANGE> Updated metadata for Dmarcos
   title: "Dmarcos - Desembaraço Aduaneiro",
   description:
     "Mais de 40 anos resolvendo todas as fases da logística de desembaraço nas áreas portuária, armazenamento e expedição de mercadorias.",
   generator: "v0.app",
-  /**
-   * Favicon: `app/icon.png` (logo Dmarcos) — gerado automaticamente pelo Next.js.
-   * Apple Touch: `app/apple-icon.png`.
-   * SVG extra em `public/icon.svg` (opcional).
-   */
+  /** Favicon em `public/favicon.png` (respeita `NEXT_PUBLIC_BASE_PATH` na Hostinger) */
   icons: {
-    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
-    apple: "/apple-icon.png",
+    icon: [{ url: faviconUrl, type: "image/png" }],
+    apple: [{ url: faviconUrl, type: "image/png" }],
   },
 }
 
