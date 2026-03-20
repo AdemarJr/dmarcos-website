@@ -28,6 +28,8 @@ export default function Home() {
     galeria1: "/images/images01.jpeg",
     galeria2: "/images/images02.jpeg",
     galeria3: "/images/images03.jpeg",
+    /** Fundo suave do hero (abaixo do header) */
+    heroArtigo: "/images/Artigo_Desembaraco_Aduaneiro-01.jpg",
   } as const
 
   // O login agora é feito pelo LoginDialog
@@ -43,14 +45,21 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       <SiteHeader onLoginClick={() => setShowLogin(true)} />
 
-      {/* Hero Section with Login */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-accent/20 text-primary-foreground">
-        <div className="absolute inset-0 opacity-25">
+      {/* Hero: imagem de fundo suave + gradiente (texto legível) */}
+      <section className="relative overflow-hidden bg-primary text-primary-foreground">
+        {/* Imagem de fundo “transparente” (opacidade baixa; JPG não tem alpha — o efeito é pelo overlay) */}
+        <div
+          className="pointer-events-none absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.22]"
+          style={{ backgroundImage: `url(${assetUrl(img.heroArtigo)})` }}
+          aria-hidden
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/93 via-primary/88 to-accent/25" />
+        <div className="pointer-events-none absolute inset-0 opacity-25">
           <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-accent blur-3xl" />
           <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-primary-foreground/20 blur-3xl" />
         </div>
 
-        <div className="page-container relative py-20 md:py-28">
+        <div className="page-container relative z-10 py-20 md:py-28">
           <div className="grid md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
             {/* Left side - Tagline and description */}
             <div>
@@ -85,6 +94,7 @@ export default function Home() {
             </div>
 
             {/* Right side - Hero visuals + Login */}
+
           </div>
         </div>
       </section>

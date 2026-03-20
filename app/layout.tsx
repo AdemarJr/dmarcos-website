@@ -13,21 +13,13 @@ export const metadata: Metadata = {
   description:
     "Mais de 40 anos resolvendo todas as fases da logística de desembaraço nas áreas portuária, armazenamento e expedição de mercadorias.",
   generator: "v0.app",
+  /**
+   * Favicon: `app/icon.png` (logo Dmarcos) — gerado automaticamente pelo Next.js.
+   * Apple Touch: `app/apple-icon.png`.
+   * SVG extra em `public/icon.svg` (opcional).
+   */
   icons: {
-    icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
-    ],
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
     apple: "/apple-icon.png",
   },
 }
