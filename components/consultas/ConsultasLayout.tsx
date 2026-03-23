@@ -51,16 +51,11 @@ export function ConsultasLayout({ children }: { children: React.ReactNode }) {
   const companyName = cliente?.nomeEmpresa?.trim() || "Cliente"
   const companyCnpj = cliente?.cnpj?.trim() || ""
 
-  const mobileNavValue =
-    pathname?.startsWith("/consultas/di-registradas")
-      ? "/consultas/di-registradas"
-      : pathname?.startsWith("/consultas/di-liberadas")
-        ? "/consultas/di-liberadas"
-        : pathname?.startsWith("/consultas/periodo")
-          ? "/consultas/periodo"
-          : pathname?.startsWith("/consultas/detalhes")
-            ? "/consultas/detalhes"
-            : "/consultas/di-registradas"
+  const mobileNavValue = pathname?.startsWith("/consultas/di-liberadas")
+    ? "/consultas/di-liberadas"
+    : pathname?.startsWith("/consultas/processos") || pathname?.startsWith("/consultas/detalhes")
+      ? "/consultas/processos"
+      : "/consultas/di-registradas"
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -96,17 +91,15 @@ export function ConsultasLayout({ children }: { children: React.ReactNode }) {
               <SelectContent>
                 <SelectItem value="/consultas/di-registradas">DIs registradas</SelectItem>
                 <SelectItem value="/consultas/di-liberadas">DIs liberadas</SelectItem>
-                <SelectItem value="/consultas/periodo">Período</SelectItem>
-                <SelectItem value="/consultas/detalhes">Detalhes</SelectItem>
+                <SelectItem value="/consultas/processos">Processos</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-1 flex-wrap">
             <NavLink href="/consultas/di-registradas" label="DIs registradas" />
             <NavLink href="/consultas/di-liberadas" label="DIs liberadas" />
-            <NavLink href="/consultas/periodo" label="Período" />
-            <NavLink href="/consultas/detalhes" label="Detalhes" />
+            <NavLink href="/consultas/processos" label="Processos" />
           </nav>
 
           <div className="flex items-center gap-2">

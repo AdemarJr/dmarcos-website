@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-
-const EXTERNAL_API_BASE =
-  process.env.EXTERNAL_API_BASE_URL || "https://untransferable-nita-ungaping.ngrok-free.dev"
+import { EXTERNAL_API_BASE, externalHeaders } from "@/lib/server-external-api"
 
 // Proxy GET /consultas/di-registradas para o backend externo
 export async function GET(req: NextRequest) {
@@ -15,9 +13,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const upstreamRes = await fetch(`${EXTERNAL_API_BASE}/consultas/di-registradas${search}`, {
-      headers: {
-        Authorization: auth,
-      },
+      headers: externalHeaders({ Authorization: auth }),
     })
     const data = await upstreamRes.json().catch(() => null)
     return NextResponse.json(data ?? {}, { status: upstreamRes.status })

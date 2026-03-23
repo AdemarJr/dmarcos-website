@@ -44,6 +44,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       <SiteHeader onLoginClick={() => setShowLogin(true)} />
+      <LoginDialog open={showLogin} onOpenChange={setShowLogin} />
 
       {/* Hero: imagem de fundo suave + gradiente (texto legível) */}
       <section className="relative overflow-hidden bg-primary text-primary-foreground">
@@ -84,7 +85,7 @@ export default function Home() {
                 </Button>
                 <Button
                   size="lg"
-                  onClick={() => setShowLogin(!showLogin)}
+                  onClick={() => setShowLogin(true)}
                   variant="outline"
                   className="border-primary text-primary hover:bg-primary hover:text-white font-semibold transition-colors"
                 >

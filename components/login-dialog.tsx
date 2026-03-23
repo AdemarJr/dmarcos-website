@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { apiUrl } from "@/lib/api-url"
 
 interface LoginDialogProps {
   open: boolean
@@ -26,25 +27,33 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`/api/login`, {
+      const res = await fetch(apiUrl("/api/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cnpj, senha: password })
-      });
-      const data = await res.json();
-      // API externa retorna: { auth: true, token: string, cliente: {...} }
-      if (res.ok && data.auth && data.token) {
+        body: JSON.stringify({ cnpj, senha: password }),
+      })
+      const data = (await res.json()) as Record<string, unknown>
+
+      const token =
+        (typeof data.token === "string" && data.token) ||
+        (typeof data.Token === "string" && data.Token) ||
+        (typeof data.access_token === "string" && data.access_token) ||
+        (typeof data.accessToken === "string" && data.accessToken)
+
+      const explicitFail = data.auth === false || data.success === false
+      const ok = res.ok && Boolean(token) && !explicitFail
+
+      // API externa costuma retornar: { auth: true, token, cliente } — aceitamos variações de nome do token
+      if (ok && token) {
         localStorage.setItem("dmarcos_auth", "1");
-        localStorage.setItem("dmarcos_token", String(data.token));
+        localStorage.setItem("dmarcos_token", String(token));
         try {
-          const cliente = data.cliente || {};
-          const nomeEmpresa =
-            cliente.NOME_CLIENTE ||
-            cliente.RAZAO_SOCIAL ||
-            cliente.FANTASIA ||
-            ""
+          const cliente = (data.cliente as Record<string, unknown>) || {}
+          const nomeEmpresa = String(
+            cliente.NOME_CLIENTE ?? cliente.RAZAO_SOCIAL ?? cliente.FANTASIA ?? ""
+          )
           const cnpjFromApi =
-            cliente.INSC_CGC_CLIENTE || cliente.CNPJ || cliente.cnpj || cnpj
+            cliente.INSC_CGC_CLIENTE ?? cliente.CNPJ ?? cliente.cnpj ?? cnpj
           localStorage.setItem(
             "dmarcos_cliente",
             JSON.stringify({ nomeEmpresa, cnpj: String(cnpjFromApi) })
@@ -56,7 +65,12 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
         onOpenChange(false);
         router.push("/consultas/di-registradas");
       } else {
-        setError(data.error || "Erro ao autenticar.");
+        const msg =
+          (typeof data.error === "string" && data.error) ||
+          (typeof data.message === "string" && data.message) ||
+          (typeof data.mensagem === "string" && data.mensagem) ||
+          "Erro ao autenticar."
+        setError(msg)
         setLoading(false);
       }
     } catch (err) {

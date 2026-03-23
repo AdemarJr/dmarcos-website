@@ -24,6 +24,7 @@ import {
   ArrowDown,
   Filter,
   X,
+  Eye,
 } from "lucide-react"
 
 interface ProcessTableProps {
@@ -34,6 +35,8 @@ interface ProcessTableProps {
   processos: Processo[]
   onSelectProcess: (processo: Processo) => void
   onBack: () => void
+  /** Se true, o detalhe só abre pelo botão na linha (evita clique acidental na linha inteira). */
+  detailViaButtonOnly?: boolean
 }
 
 type SortField = keyof Processo
@@ -88,6 +91,7 @@ export function ProcessTable({
   processos,
   onSelectProcess,
   onBack,
+  detailViaButtonOnly = false,
 }: ProcessTableProps) {
   const [searchText, setSearchText] = useState("")
   const [canalFilter, setCanalFilter] = useState<string>("all")
@@ -98,9 +102,20 @@ export function ProcessTable({
   const [itemsPerPage, setItemsPerPage] = useState(25)
   const [showFilters, setShowFilters] = useState(false)
 
-  // Unique values for filters
+  /** Valor sentinela — Radix Select não permite `value=""` em SelectItem */
+  const LOCAL_VAZIO = "__local_vazio__"
+
+  // Unique values for filters (sem string vazia; vazios entram como opção separada)
+  const hasLocalVazio = useMemo(
+    () => processos.some((p) => !String(p.local ?? "").trim()),
+    [processos]
+  )
+
   const uniqueLocals = useMemo(
-    () => [...new Set(processos.map((p) => p.local))].sort(),
+    () =>
+      [...new Set(processos.map((p) => p.local))]
+        .filter((loc) => String(loc ?? "").trim() !== "")
+        .sort(),
     [processos]
   )
 
@@ -128,7 +143,9 @@ export function ProcessTable({
 
     // Local filter
     if (localFilter !== "all") {
-      data = data.filter((p) => p.local === localFilter)
+      data = data.filter((p) =>
+        localFilter === LOCAL_VAZIO ? !String(p.local ?? "").trim() : p.local === localFilter
+      )
     }
 
     // Sorting
@@ -397,8 +414,13 @@ export function ProcessTable({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Todos</SelectItem>
+                  {hasLocalVazio && (
+                    <SelectItem value={LOCAL_VAZIO}>(Sem local)</SelectItem>
+                  )}
                   {uniqueLocals.map((loc) => (
-                    <SelectItem key={loc} value={loc}>{loc}</SelectItem>
+                    <SelectItem key={loc} value={loc}>
+                      {loc}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -431,12 +453,20 @@ export function ProcessTable({
                     </span>
                   </th>
                 ))}
+                {detailViaButtonOnly && (
+                  <th className="px-3 py-3 text-right font-semibold text-xs whitespace-nowrap w-[120px]">
+                    Ações
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody>
               {paginatedData.length === 0 ? (
                 <tr>
-                  <td colSpan={TABLE_COLUMNS.length + 1} className="px-3 py-12 text-center text-muted-foreground">
+                  <td
+                    colSpan={TABLE_COLUMNS.length + 1 + (detailViaButtonOnly ? 1 : 0)}
+                    className="px-3 py-12 text-center text-muted-foreground"
+                  >
                     Nenhum registro encontrado.
                   </td>
                 </tr>
@@ -446,8 +476,10 @@ export function ProcessTable({
                   return (
                     <tr
                       key={processo.id}
-                      className="cursor-pointer border-b border-border last:border-0 hover:bg-accent/5 transition-colors even:bg-secondary/30"
-                      onClick={() => onSelectProcess(processo)}
+                      className={`border-b border-border last:border-0 even:bg-secondary/30 transition-colors ${
+                        detailViaButtonOnly ? "" : "cursor-pointer hover:bg-accent/5"
+                      }`}
+                      onClick={detailViaButtonOnly ? undefined : () => onSelectProcess(processo)}
                     >
                       <td className="px-3 py-2.5 text-xs text-muted-foreground">{rowNumber}</td>
                       {TABLE_COLUMNS.map((col) => {
@@ -504,6 +536,23 @@ export function ProcessTable({
                           </td>
                         )
                       })}
+                      {detailViaButtonOnly && (
+                        <td
+                          className="px-2 py-2 text-right border-l border-border/40"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            className="gap-1 h-8 text-xs shrink-0"
+                            onClick={() => onSelectProcess(processo)}
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                            Detalhar
+                          </Button>
+                        </td>
+                      )}
                     </tr>
                   )
                 })

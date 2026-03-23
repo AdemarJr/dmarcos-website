@@ -1,16 +1,20 @@
 import { NextRequest, NextResponse } from "next/server"
-
-const EXTERNAL_API_BASE =
-  process.env.EXTERNAL_API_BASE_URL || "https://untransferable-nita-ungaping.ngrok-free.dev"
+import { EXTERNAL_API_BASE, externalHeaders } from "@/lib/server-external-api"
 
 // Proxy GET /consultas/detalhes/:nr_processo para o backend externo
-export async function GET(req: NextRequest, ctx: { params: { nr_processo: string } }) {
+export async function GET(
+  req: NextRequest,
+  ctx: { params: Promise<{ nr_processo: string }> }
+) {
   const auth = req.headers.get("authorization")
   if (!auth) {
     return NextResponse.json({ error: "Token não fornecido" }, { status: 401 })
   }
 
-  const { nr_processo } = ctx.params
+  const { nr_processo: raw } = await ctx.params
+  const nr_processo = String(raw ?? "")
+    .trim()
+    .replace(/^\/+|\/+$/g, "")
   if (!nr_processo) {
     return NextResponse.json({ error: "Número do processo é obrigatório." }, { status: 400 })
   }
@@ -22,7 +26,7 @@ export async function GET(req: NextRequest, ctx: { params: { nr_processo: string
     const upstreamRes = await fetch(
       `${EXTERNAL_API_BASE}/consultas/detalhes/${encodeURIComponent(nr_processo)}${search}`,
       {
-        headers: { Authorization: auth },
+        headers: externalHeaders({ Authorization: auth }),
       }
     )
     const data = await upstreamRes.json().catch(() => null)
