@@ -15,7 +15,6 @@ import {
   Warehouse,
   User,
   Scale,
-  Factory,
 } from "lucide-react"
 import {
   formatCurrencyBrl,
@@ -94,14 +93,6 @@ export function ProcessDetail({ processo, companyName, onClose, closeLabel = "No
   const statusLabel = (processo.status || "").trim() || "—"
   const canalLabel = processo.canal === "VERDE" ? "Canal Verde" : "Canal Vermelho"
 
-  const hasIndicadoresUsado =
-    processo.usadoIndustria ||
-    processo.usadoAtivoPpb ||
-    processo.usadoAtivoNaoPpb ||
-    processo.usadoUsoConsumo ||
-    processo.usadoComercializacao ||
-    processo.usadoPexpam
-
   return (
     <div className="max-w-5xl mx-auto space-y-4">
       <div className="flex items-center justify-between print:hidden">
@@ -178,28 +169,6 @@ export function ProcessDetail({ processo, companyName, onClose, closeLabel = "No
             <DetailField label="Exportador" value={processo.nmExportador ?? ""} />
           </CardContent>
         </Card>
-
-        {hasIndicadoresUsado ? (
-          <Card className="md:col-span-2">
-            <CardHeader className="pb-3 pt-5 px-5">
-              <SectionTitle icon={<Factory className="w-4 h-4" />} title="Indicadores de uso" />
-            </CardHeader>
-            <CardContent className="px-5 pb-5">
-              <p className="text-xs text-muted-foreground mb-4 print:hidden">
-                Campos S/N da declaração (ex.: <code className="text-[10px] bg-muted px-1 rounded">USADO_*</code>).
-                Exibidos como Sim ou Não.
-              </p>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8">
-                <DetailField label="Usado na indústria" value={processo.usadoIndustria ?? ""} />
-                <DetailField label="Ativo PPB" value={processo.usadoAtivoPpb ?? ""} />
-                <DetailField label="Ativo não PPB" value={processo.usadoAtivoNaoPpb ?? ""} />
-                <DetailField label="Uso e consumo" value={processo.usadoUsoConsumo ?? ""} />
-                <DetailField label="Comercialização" value={processo.usadoComercializacao ?? ""} />
-                <DetailField label="PEXPAM" value={processo.usadoPexpam ?? ""} />
-              </div>
-            </CardContent>
-          </Card>
-        ) : null}
 
         <Card>
           <CardHeader className="pb-3 pt-5 px-5">
@@ -310,15 +279,6 @@ export function ProcessDetail({ processo, companyName, onClose, closeLabel = "No
             <DetailField label="Desova dt. excl." value={processo.desovaDtExcl} />
             <DetailField label="Desova valores" value={processo.desovaValores} />
             <DetailField label="Desova cpl. pgto" value={processo.desovaCplPgto} />
-          </CardContent>
-        </Card>
-
-        <Card className="md:col-span-2">
-          <CardHeader className="pb-3 pt-5 px-5">
-            <SectionTitle icon={<FileText className="w-4 h-4" />} title="Pagamento / banco" />
-          </CardHeader>
-          <CardContent className="px-5 pb-5">
-            <DetailField label="Banco / agência / conta" value={processo.bancoAgenciaConta ?? ""} />
           </CardContent>
         </Card>
       </div>
