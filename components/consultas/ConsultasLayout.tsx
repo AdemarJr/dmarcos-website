@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Building2, LogOut, Menu } from "lucide-react"
 import { clearSession, readClienteSession, readToken, type ClienteSession } from "@/lib/client-session"
+import { formatCnpjDisplay } from "@/lib/format-display"
 import {
   Select,
   SelectContent,
@@ -49,7 +50,8 @@ export function ConsultasLayout({ children }: { children: React.ReactNode }) {
   }
 
   const companyName = cliente?.nomeEmpresa?.trim() || "Cliente"
-  const companyCnpj = cliente?.cnpj?.trim() || ""
+  const companyCnpjRaw = cliente?.cnpj?.trim() || ""
+  const companyCnpj = companyCnpjRaw ? formatCnpjDisplay(companyCnpjRaw) : ""
 
   const mobileNavValue = pathname?.startsWith("/consultas/di-liberadas")
     ? "/consultas/di-liberadas"

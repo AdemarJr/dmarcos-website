@@ -26,6 +26,12 @@ import {
   X,
   Eye,
 } from "lucide-react"
+import {
+  formatCurrencyBrl,
+  formatCurrencyUsd,
+  formatDecimalPtBr,
+  formatIntegerPtBr,
+} from "@/lib/format-display"
 
 interface ProcessTableProps {
   companyName: string
@@ -44,12 +50,17 @@ type SortDirection = "asc" | "desc"
 
 const ITEMS_PER_PAGE_OPTIONS = [10, 25, 50, 100]
 
-function formatNumber(num: number) {
-  return num.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-}
+type ColFormat = "number" | "integer" | "brl" | "usd"
 
-function formatInteger(num: number) {
-  return num.toLocaleString("pt-BR", { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+function formatCellValue(
+  col: { format?: ColFormat },
+  val: unknown
+): string {
+  if (col.format === "usd") return formatCurrencyUsd(val)
+  if (col.format === "brl") return formatCurrencyBrl(val)
+  if (col.format === "number") return formatDecimalPtBr(val)
+  if (col.format === "integer") return formatIntegerPtBr(val)
+  return String(val ?? "")
 }
 
 function escapeCsvValue(val: string | number): string {
@@ -60,7 +71,7 @@ function escapeCsvValue(val: string | number): string {
   return str
 }
 
-const TABLE_COLUMNS: { key: keyof Processo; label: string; align: "left" | "right"; format?: "number" | "integer" }[] = [
+const TABLE_COLUMNS: { key: keyof Processo; label: string; align: "left" | "right"; format?: ColFormat }[] = [
   { key: "canal", label: "Canal", align: "left" },
   { key: "noProcesso", label: "No. Processo", align: "left" },
   { key: "embarque", label: "Embarque", align: "left" },
@@ -70,13 +81,13 @@ const TABLE_COLUMNS: { key: keyof Processo; label: string; align: "left" | "righ
   { key: "numeroDI", label: "Numero DI", align: "left" },
   { key: "dataDI", label: "Data DI", align: "left" },
   { key: "local", label: "Local", align: "left" },
-  { key: "valorFobUsd", label: "FOB USD", align: "right", format: "number" },
-  { key: "valorFobBrl", label: "FOB R$", align: "right", format: "number" },
-  { key: "txSiscomex", label: "TX SISCOMEX", align: "right", format: "number" },
-  { key: "iiPg", label: "II PG", align: "right", format: "number" },
-  { key: "ipiPg", label: "IPI PG", align: "right", format: "number" },
-  { key: "pisPg", label: "PIS PG", align: "right", format: "number" },
-  { key: "cofinsPg", label: "COFINS PG", align: "right", format: "number" },
+  { key: "valorFobUsd", label: "FOB USD", align: "right", format: "usd" },
+  { key: "valorFobBrl", label: "FOB R$", align: "right", format: "brl" },
+  { key: "txSiscomex", label: "TX SISCOMEX", align: "right", format: "brl" },
+  { key: "iiPg", label: "II PG", align: "right", format: "brl" },
+  { key: "ipiPg", label: "IPI PG", align: "right", format: "brl" },
+  { key: "pisPg", label: "PIS PG", align: "right", format: "brl" },
+  { key: "cofinsPg", label: "COFINS PG", align: "right", format: "brl" },
   { key: "pbCarga", label: "PB Carga", align: "right", format: "number" },
   { key: "plCarga", label: "PL Carga", align: "right", format: "number" },
   { key: "qtdVol", label: "Qtd Vol", align: "right", format: "integer" },
@@ -221,8 +232,7 @@ export function ProcessTable({
       const rows = data.map((p) =>
         TABLE_COLUMNS.map((col) => {
           const val = p[col.key]
-          if (col.format === "number") return escapeCsvValue(formatNumber(val as number))
-          if (col.format === "integer") return escapeCsvValue(formatInteger(val as number))
+          if (col.format) return escapeCsvValue(formatCellValue(col, val))
           return escapeCsvValue(String(val))
         }).join(",")
       )
@@ -258,10 +268,8 @@ export function ProcessTable({
           "<tr>" +
           TABLE_COLUMNS.map((col) => {
             const val = p[col.key]
-            if (col.format === "number")
-              return `<td style="text-align:right">${formatNumber(val as number)}</td>`
-            if (col.format === "integer")
-              return `<td style="text-align:right">${formatInteger(val as number)}</td>`
+            if (col.format === "usd" || col.format === "brl" || col.format === "number" || col.format === "integer")
+              return `<td style="text-align:right">${formatCellValue(col, val)}</td>`
             return `<td>${String(val)}</td>`
           }).join("") +
           "</tr>"
@@ -502,18 +510,11 @@ export function ProcessTable({
                           )
                         }
 
-                        // Number formatting
-                        if (col.format === "number") {
+                        // Moeda / números (pt-BR)
+                        if (col.format === "usd" || col.format === "brl" || col.format === "number" || col.format === "integer") {
                           return (
                             <td key={col.key} className="px-3 py-2.5 text-right text-foreground tabular-nums">
-                              {formatNumber(val as number)}
-                            </td>
-                          )
-                        }
-                        if (col.format === "integer") {
-                          return (
-                            <td key={col.key} className="px-3 py-2.5 text-right text-foreground tabular-nums">
-                              {formatInteger(val as number)}
+                              {formatCellValue(col, val)}
                             </td>
                           )
                         }
@@ -522,7 +523,7 @@ export function ProcessTable({
                         if (col.key === "noProcesso") {
                           return (
                             <td key={col.key} className="px-3 py-2.5 font-semibold text-accent">
-                              {String(val)}
+                              {formatIntegerPtBr(val as number)}
                             </td>
                           )
                         }

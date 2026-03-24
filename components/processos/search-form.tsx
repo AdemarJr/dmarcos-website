@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
+import { isoDateToBr } from "@/lib/format-display"
 import { Search, FileText, FileCheck, AlertTriangle, Building2 } from "lucide-react"
 
 export type SearchType = "dis_registradas" | "dis_liberadas" | "mapa_pendencias"
@@ -136,6 +137,11 @@ export function SearchForm({ companyName, onSearch }: SearchFormProps) {
                   />
                 </div>
               </div>
+              {dateFrom && dateTo && (
+                <p className="text-xs text-muted-foreground">
+                  Período selecionado: {isoDateToBr(dateFrom)} a {isoDateToBr(dateTo)}
+                </p>
+              )}
             </div>
           </CardContent>
         </Card>

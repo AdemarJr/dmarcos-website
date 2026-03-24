@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { apiUrl } from "@/lib/api-url"
+import { digitsOnly, maskCnpjInput } from "@/lib/format-display"
 
 interface LoginDialogProps {
   open: boolean
@@ -30,7 +31,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
       const res = await fetch(apiUrl("/api/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cnpj, senha: password }),
+        body: JSON.stringify({ cnpj: digitsOnly(cnpj), senha: password }),
       })
       const data = (await res.json()) as Record<string, unknown>
 
@@ -95,9 +96,11 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
               <Input
                 id="cnpj"
                 type="text"
-                placeholder="Digite o CNPJ"
+                inputMode="numeric"
+                autoComplete="username"
+                placeholder="00.000.000/0000-00"
                 value={cnpj}
-                onChange={(e) => setCnpj(e.target.value)}
+                onChange={(e) => setCnpj(maskCnpjInput(e.target.value))}
                 required
               />
             </div>

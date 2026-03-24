@@ -52,6 +52,47 @@ export interface Processo {
   qtdeAdicoes: number
   valorFobLocEmbarque: number
   historico: string
+
+  /** Campos extras retornados pelo endpoint de detalhes (API) */
+  nmCliente?: string
+  tpDeclaracao?: string
+  tipoProcesso?: string
+  cdCliente?: number
+  nrCeMercante?: string
+  nrProtocolo?: string
+  dtEmbarque?: string
+  dtEntrega?: string
+  nmLocalEmbarque?: string
+  nmExportador?: string
+  nmAgenteCarga?: string
+  nmVeiculoTransporte?: string
+  nmAgenteTransportador?: string
+  vlFreteMoedaNacional?: number
+  vlSeguroMoedaNacional?: number
+  vlTcif?: number
+  vlIiDevido?: number
+  vlIpiDevido?: number
+  vlPisDevido?: number
+  vlCofinsDevido?: number
+  vlTaxasRecolher?: number
+  vlIiRecolher?: number
+  vlIpiRecolher?: number
+  vlPisRecolher?: number
+  vlCofinsRecolher?: number
+  bancoAgenciaConta?: string
+  cdIncoterm?: string
+  cdMoedaFob?: string
+  nmPendenciaMapa?: string
+  cdRecintoAlfandegado?: string
+  nmDocChegada?: string
+
+  /** Indicadores S/N da API (exibidos como Sim/Não) */
+  usadoIndustria?: string
+  usadoAtivoPpb?: string
+  usadoAtivoNaoPpb?: string
+  usadoUsoConsumo?: string
+  usadoComercializacao?: string
+  usadoPexpam?: string
 }
 
 export const mockProcessos: Processo[] = [

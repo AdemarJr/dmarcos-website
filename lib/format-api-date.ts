@@ -1,2 +1,2 @@
 /** @deprecated importe de `@/lib/format-display` */
-export { isoDateToBr } from "./format-display"
+export { formatApiDate } from "./format-display"

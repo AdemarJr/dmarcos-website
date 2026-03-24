@@ -162,3 +162,24 @@
     @apply text-muted-foreground mt-3 text-balance;
   }
 }
+
+/* Impressão em Processos: só o detalhe do processo (sem busca, filtros, tabela, etc.) */
+@media print {
+  @page {
+    margin: 12mm;
+    size: auto;
+  }
+  body.print-processo-only {
+    background: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  body.print-processo-only main .container {
+    max-width: 100% !important;
+    padding: 0.5rem 0 !important;
+  }
+  body.print-processo-only main .container .processos-page-content > *:not(.processo-print-root),
+  body.print-processo-only main .container .consultas-list-page-content > *:not(.processo-print-root) {
+    display: none !important;
+  }
+}
