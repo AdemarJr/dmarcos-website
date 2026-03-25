@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 
-/** A consulta por período foi unificada nas telas DIs Registradas e DIs Liberadas. */
+/** Rota legada: período é usado em DIs registradas / liberadas (menu Consultas). */
 export default function PeriodoRedirectPage() {
-  redirect("/consultas/di-registradas")
+  redirect("/consultas/processos")
 }

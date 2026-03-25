@@ -104,7 +104,7 @@ export default function ProcessosPage() {
   const router = useRouter()
 
   useEffect(() => {
-    router.replace("/consultas/di-registradas")
+    router.replace("/consultas/processos")
   }, [router])
 
   return null

@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { CotacaoMoedasPanel } from "@/components/consultas/cotacao-moedas-panel"
 
 function NavLink({ href, label }: { href: string; label: string }) {
   const pathname = usePathname()
@@ -21,6 +22,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
+      prefetch={false}
       className={`text-sm font-medium px-3 py-1.5 rounded-md transition-colors ${
         active ? "bg-accent/10 text-accent" : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
       }`}
@@ -104,7 +106,8 @@ export function ConsultasLayout({ children }: { children: React.ReactNode }) {
             <NavLink href="/consultas/processos" label="Processos" />
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <CotacaoMoedasPanel />
             <Button onClick={handleLogout} variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
               <LogOut className="w-4 h-4" />
               <span className="hidden sm:inline">Sair</span>

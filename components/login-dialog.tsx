@@ -64,7 +64,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
         }
         setLoading(false);
         onOpenChange(false);
-        router.push("/consultas/di-registradas");
+        router.push("/consultas/processos");
       } else {
         const msg =
           (typeof data.error === "string" && data.error) ||
