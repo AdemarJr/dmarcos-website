@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { EXTERNAL_API_BASE, externalHeaders } from "@/lib/server-external-api"
+import { EXTERNAL_API_BASE, externalFetch, externalHeaders } from "@/lib/server-external-api"
 
 // Proxy para o backend externo: POST /login
 export async function POST(req: NextRequest) {
@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
       senha,
     }
 
-    const upstreamRes = await fetch(`${EXTERNAL_API_BASE}/login`, {
+    const upstreamRes = await externalFetch(`${EXTERNAL_API_BASE}/login`, {
       method: "POST",
       headers: externalHeaders({ "Content-Type": "application/json" }),
       body: JSON.stringify(normalized),
@@ -37,7 +37,22 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(parsed ?? {}, { status: upstreamRes.status })
   } catch (error) {
-    console.error("Erro ao chamar backend externo /login:", error)
-    return NextResponse.json({ error: "Erro ao autenticar no servidor." }, { status: 500 })
+    const err = error instanceof Error ? error : new Error(String(error))
+    const cause = err.cause instanceof Error ? err.cause.message : ""
+    const blob = `${err.message} ${cause}`.toLowerCase()
+    console.error("Erro ao chamar backend externo /login:", err.message, cause || "")
+
+    const tlsOrSsl =
+      blob.includes("certificate") ||
+      blob.includes("ssl") ||
+      blob.includes("tls") ||
+      blob.includes("self signed") ||
+      blob.includes("unable to verify")
+
+    const msg = tlsOrSsl
+      ? "Falha de certificado HTTPS. Defina EXTERNAL_API_TLS_INSECURE=true no servidor Next, ou use EXTERNAL_API_BASE_URL=http://...:3001 se a API só expuser HTTP, ou TLS válido no backend."
+      : `Não foi possível conectar ao servidor de autenticação em ${EXTERNAL_API_BASE}. Verifique firewall, se a API está no ar e se EXTERNAL_API_BASE_URL está correto.`
+
+    return NextResponse.json({ error: msg }, { status: 502 })
   }
 }

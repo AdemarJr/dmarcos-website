@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { readClienteSession, readToken, clearSession } from "@/lib/client-session"
 import { mapRowToProcesso } from "@/lib/processo-mapper"
-import { apiUrl } from "@/lib/api-url"
+import { backendUrl } from "@/lib/backend-api-url"
 import { isoDateToBr } from "@/lib/format-display"
 import { Label } from "@/components/ui/label"
 import { CalendarRange, List } from "lucide-react"
@@ -85,7 +85,7 @@ export function DiConsultaList({ variant }: { variant: DiVariant }) {
         data_inicio: dataInicio,
         data_fim: dataFim,
       })
-      const res = await fetch(apiUrl(`${cfg.apiPath}?${qs.toString()}`), {
+      const res = await fetch(backendUrl(`${cfg.apiPath}?${qs.toString()}`), {
         headers: { Authorization: `Bearer ${token}` },
       })
       if (res.status === 401) {
@@ -123,7 +123,7 @@ export function DiConsultaList({ variant }: { variant: DiVariant }) {
     if (!token) return
     try {
       const res = await fetch(
-        apiUrl(`/api/consultas/detalhes/${encodeURIComponent(String(p.id || p.noProcesso))}`),
+        backendUrl(`/api/consultas/detalhes/${encodeURIComponent(String(p.id || p.noProcesso))}`),
         {
           headers: { Authorization: `Bearer ${token}` },
         }

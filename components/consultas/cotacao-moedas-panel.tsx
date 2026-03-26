@@ -11,7 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { readToken } from "@/lib/client-session"
-import { apiUrl } from "@/lib/api-url"
+import { backendUrl } from "@/lib/backend-api-url"
 import { formatDecimalPtBr } from "@/lib/format-display"
 import { Banknote, Loader2 } from "lucide-react"
 
@@ -48,7 +48,7 @@ export function CotacaoMoedasPanel() {
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch(apiUrl("/api/consultas/moedas"), {
+      const res = await fetch(backendUrl("/api/consultas/moedas"), {
         headers: { Authorization: `Bearer ${token}` },
       })
       const payload = await res.json().catch(() => null)

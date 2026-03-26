@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { EXTERNAL_API_BASE, externalHeaders } from "@/lib/server-external-api"
+import { EXTERNAL_API_BASE, externalFetch, externalHeaders } from "@/lib/server-external-api"
 
 // Proxy GET /consultas/detalhes/:nr_processo para o backend externo
 export async function GET(
@@ -23,7 +23,7 @@ export async function GET(
   const search = url.search
 
   try {
-    const upstreamRes = await fetch(
+    const upstreamRes = await externalFetch(
       `${EXTERNAL_API_BASE}/consultas/detalhes/${encodeURIComponent(nr_processo)}${search}`,
       {
         headers: externalHeaders({ Authorization: auth }),

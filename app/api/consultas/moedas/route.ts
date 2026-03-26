@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { EXTERNAL_API_BASE, externalHeaders } from "@/lib/server-external-api"
+import { EXTERNAL_API_BASE, externalFetch, externalHeaders } from "@/lib/server-external-api"
 
 function pickErrorMessage(data: unknown, status: number): string {
   if (data && typeof data === "object") {
@@ -25,14 +25,14 @@ export async function GET(req: NextRequest) {
       auth ? { Authorization: auth } : undefined
     )
 
-    let upstreamRes = await fetch(`${EXTERNAL_API_BASE}/consultas/moedas`, {
+    let upstreamRes = await externalFetch(`${EXTERNAL_API_BASE}/consultas/moedas`, {
       headers: headersWithAuth,
       cache: "no-store",
     })
 
-    // Alguns backends expõem cotações sem Bearer; tenta de novo só com ngrok.
+    // Alguns backends expõem cotações sem Bearer; tenta de novo só com headers mínimos.
     if (upstreamRes.status === 401 && auth) {
-      upstreamRes = await fetch(`${EXTERNAL_API_BASE}/consultas/moedas`, {
+      upstreamRes = await externalFetch(`${EXTERNAL_API_BASE}/consultas/moedas`, {
         headers: externalHeaders(),
         cache: "no-store",
       })
@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(
         {
           error:
-            "Resposta inválida do servidor de cotações (não é JSON). Verifique se o backend e o ngrok estão no ar.",
+            "Resposta inválida do servidor de cotações (não é JSON). Verifique se o backend está no ar e se EXTERNAL_API_BASE_URL está correto.",
         },
         { status: 502 }
       )

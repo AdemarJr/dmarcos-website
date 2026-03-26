@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { readClienteSession, readToken, clearSession } from "@/lib/client-session"
 import { mapRowToProcesso } from "@/lib/processo-mapper"
-import { apiUrl } from "@/lib/api-url"
+import { backendUrl } from "@/lib/backend-api-url"
+import { digitsOnly } from "@/lib/format-display"
 import { FileSearch } from "lucide-react"
 
 export default function ProcessosPage() {
@@ -41,7 +42,7 @@ export default function ProcessosPage() {
       router.push("/")
       return
     }
-    const id = nrProcesso.trim()
+    const id = digitsOnly(nrProcesso)
     if (!id) {
       setBuscaError("Informe o número do processo.")
       return
@@ -50,7 +51,7 @@ export default function ProcessosPage() {
     setBuscaError(null)
     setProcessoBusca(null)
     try {
-      const res = await fetch(apiUrl(`/api/consultas/detalhes/${encodeURIComponent(id)}`), {
+      const res = await fetch(backendUrl(`/api/consultas/detalhes/${encodeURIComponent(id)}`), {
         headers: { Authorization: `Bearer ${token}` },
       })
       if (res.status === 401) {
@@ -83,15 +84,17 @@ export default function ProcessosPage() {
             Buscar processo
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            Digite o número do processo e busque para ver as informações completas.
+            Digite o número do processo (apenas algarismos; pontos, barras e outros símbolos são ignorados).
           </p>
         </CardHeader>
         <CardContent className="pt-4">
           <div className="flex flex-col sm:flex-row gap-2 max-w-2xl">
             <Input
               value={nrProcesso}
-              onChange={(e) => setNrProcesso(e.target.value)}
-              placeholder="Número do processo"
+              inputMode="numeric"
+              autoComplete="off"
+              onChange={(e) => setNrProcesso(digitsOnly(e.target.value))}
+              placeholder="Somente números"
               onKeyDown={(e) => {
                 if (e.key === "Enter") buscarPorNumero()
               }}

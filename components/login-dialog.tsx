@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { apiUrl } from "@/lib/api-url"
+import { backendUrl } from "@/lib/backend-api-url"
 import { digitsOnly, maskCnpjInput } from "@/lib/format-display"
 
 interface LoginDialogProps {
@@ -28,7 +28,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(apiUrl("/api/login"), {
+      const res = await fetch(backendUrl("/api/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ cnpj: digitsOnly(cnpj), senha: password }),
@@ -64,7 +64,7 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
         }
         setLoading(false);
         onOpenChange(false);
-        router.push("/consultas/processos");
+        router.push("/consultas/di-registradas");
       } else {
         const msg =
           (typeof data.error === "string" && data.error) ||
@@ -75,7 +75,12 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
         setLoading(false);
       }
     } catch (err) {
-      setError("Erro ao conectar ao servidor.");
+      const direct = process.env.NEXT_PUBLIC_DIRECT_API_BASE_URL
+      setError(
+        direct
+          ? "Não foi possível falar com a API (rede ou CORS). Confira se o backend permite o domínio do site e se a URL está correta."
+          : "Erro ao conectar ao servidor. Se aparecer falha de firewall no hosting, defina NEXT_PUBLIC_DIRECT_API_BASE_URL com a mesma URL da API (veja .env.example) e libere CORS na API."
+      )
       setLoading(false);
     }
   }
@@ -89,7 +94,17 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
         </DialogHeader>
           <form onSubmit={handleLogin} className="space-y-4 mt-4">
             {error && (
-              <div className="text-red-500 text-sm">{error}</div>
+              <div className="space-y-2">
+                <div className="text-red-600 text-sm leading-relaxed break-words">{error}</div>
+                {/conexão|banco de dados|obter conexão/i.test(error) && (
+                  <p className="text-xs text-muted-foreground border-l-2 border-amber-500/50 pl-2.5 py-1 leading-snug">
+                    O site só repassa a resposta da API. Esse erro indica falha ao conectar ao banco no{" "}
+                    <strong className="font-medium text-foreground">servidor onde a API está rodando</strong> (serviço
+                    do banco, ODBC, credenciais ou caminho do arquivo .fdb). Não é configuração do Next.js no
+                    navegador.
+                  </p>
+                )}
+              </div>
             )}
             <div className="space-y-2">
               <Label htmlFor="cnpj">CNPJ</Label>
