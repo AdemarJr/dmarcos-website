@@ -94,7 +94,7 @@ export function ProcessDetail({ processo, companyName, onClose, closeLabel = "No
   const canalLabel = processo.canal === "VERDE" ? "Canal Verde" : "Canal Vermelho"
 
   return (
-    <div className="max-w-5xl mx-auto space-y-4">
+    <div className="processo-print-document max-w-5xl mx-auto space-y-4 print:max-w-none print:space-y-3">
       <div className="flex items-center justify-between print:hidden">
         <Button variant="outline" size="sm" onClick={onClose} className="gap-2">
           <ArrowLeft className="w-4 h-4" />
@@ -141,9 +141,6 @@ export function ProcessDetail({ processo, companyName, onClose, closeLabel = "No
             <SectionTitle icon={<User className="w-4 h-4" />} title="Cliente e documento" />
           </CardHeader>
           <CardContent className="px-5 pb-5">
-            <DetailField label="Código cliente" value={processo.cdCliente ?? ""} format="integer" />
-            <DetailField label="Tipo declaração" value={processo.tpDeclaracao ?? ""} />
-            <DetailField label="Tipo processo" value={processo.tipoProcesso ?? ""} />
             <DetailField label="DI / DUIMP" value={processo.numeroDI} bold />
             <DetailField label="Incoterm" value={processo.cdIncoterm ?? ""} />
             <DetailField label="Moeda FOB (cód.)" value={processo.cdMoedaFob ?? ""} />
@@ -228,7 +225,6 @@ export function ProcessDetail({ processo, companyName, onClose, closeLabel = "No
             <DetailField label="Chegada" value={processo.dtChegada} />
             <DetailField label="Liberação" value={processo.liberacao} />
             <DetailField label="Entrega" value={processo.dtEntrega ?? ""} />
-            <DetailField label="Inscrição SEFAZ" value={processo.entSefaz} />
             <DetailField label="Saída SEFAZ" value={processo.saidaSefaz} />
             <DetailField label="Data parametrização" value={processo.dataParametrizacao} />
             <DetailField label="Data Mantra" value={processo.dataMantra} />

@@ -182,4 +182,16 @@
   body.print-processo-only main .container .consultas-list-page-content > *:not(.processo-print-root) {
     display: none !important;
   }
+
+  /* Detalhe do processo na impressão: blocos estáveis, sem sombra, tipografia legível */
+  body.print-processo-only .processo-print-document [data-slot="card"] {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid hsl(var(--border)) !important;
+    border-radius: 0.375rem;
+  }
+  body.print-processo-only .processo-print-document .grid {
+    gap: 0.75rem;
+  }
 }
