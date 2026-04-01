@@ -53,7 +53,7 @@ export function mapRowToProcesso(row: any): Processo {
     noProcesso: toNumber(noProcessoRaw, 0),
     embarque: trimStr(pick("IDT_EMBARQUE", "EMBARQUE", "embarque")),
     dataAbertura: formatApiDate(dtRegistro),
-    conhecimento: trimStr(pick("NR_DOC_CHEGADA", "NUMERO_DOC_CHEGADA", "conhecimento")),
+    conhecimento: trimStr(pick("HAWB_BL", "NR_DOC_CHEGADA", "NUMERO_DOC_CHEGADA", "conhecimento")),
     dataChegada: formatApiDate(dtChegadaRaw),
     numeroDI: trimStr(pick("NR_DI_DUIMP", "NUMERO_DI", "numeroDI")),
     dataDI: formatApiDate(dtRegistro),

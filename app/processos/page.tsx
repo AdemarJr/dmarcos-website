@@ -50,7 +50,7 @@ function mapRowToProcesso(row: any): Processo {
     noProcesso: toNumber(noProcessoRaw, 0),
     embarque: toString(pick("IDT_EMBARQUE", "EMBARQUE", "embarque")),
     dataAbertura: toString(pick("DT_REGISTRO", "DATA_ABERTURA", "dataAbertura")),
-    conhecimento: toString(pick("NR_DOC_CHEGADA", "NUMERO_DOC_CHEGADA", "conhecimento")),
+    conhecimento: toString(pick("HAWB_BL", "NR_DOC_CHEGADA", "NUMERO_DOC_CHEGADA", "conhecimento")),
     dataChegada: toString(pick("DT_CHEGADA", "DATA_CHEGADA", "dataChegada")),
     numeroDI: toString(pick("NR_DI_DUIMP", "NUMERO_DI", "numeroDI")),
     dataDI: toString(pick("DT_REGISTRO", "DATA_DA_DI", "dataDI")),
