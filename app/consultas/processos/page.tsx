@@ -81,7 +81,7 @@ export default function ProcessosPage() {
         <CardHeader className="pb-4 border-b">
           <CardTitle className="text-lg flex items-center gap-2">
             <FileSearch className="w-5 h-5 text-accent" />
-            Buscar processo
+            Buscar por Número de Processos, Di-Duimp, Embarque e Conhecimento
           </CardTitle>
           <p className="text-sm text-muted-foreground">
             Digite o número do processo (apenas algarismos; pontos, barras e outros símbolos são ignorados).
@@ -94,7 +94,7 @@ export default function ProcessosPage() {
               inputMode="numeric"
               autoComplete="off"
               onChange={(e) => setNrProcesso(digitsOnly(e.target.value))}
-              placeholder="Somente números"
+              placeholder="Digite o número do processo, Di-Duimp, Embarque e Conhecimento"
               onKeyDown={(e) => {
                 if (e.key === "Enter") buscarPorNumero()
               }}
