@@ -1,6 +1,7 @@
 export interface Processo {
   id: string
-  canal: "VERDE" | "VERMELHO"
+  /** Valor de NM_CANAL (ex.: VERDE, ANALISE FISCAL, SEM PARAMETRIZACAO, VERMELHO). */
+  canal: string
   noProcesso: number
   embarque: string
   dataAbertura: string

@@ -24,6 +24,7 @@ import {
   formatRatePtBr,
   formatWeightKg,
 } from "@/lib/format-display"
+import { canalBadgeClassName } from "@/lib/canal-display"
 
 interface ProcessDetailProps {
   processo: Processo
@@ -91,7 +92,7 @@ export function ProcessDetail({ processo, companyName, onClose, closeLabel = "No
   }
 
   const statusLabel = (processo.status || "").trim() || "—"
-  const canalLabel = processo.canal === "VERDE" ? "Canal Verde" : "Canal Vermelho"
+  const canalDisplay = (processo.canal || "").trim() || "—"
 
   return (
     <div className="processo-print-document max-w-5xl mx-auto space-y-4 print:max-w-none print:space-y-3">
@@ -121,11 +122,9 @@ export function ProcessDetail({ processo, companyName, onClose, closeLabel = "No
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <span
-                className={`inline-flex items-center px-4 py-1.5 rounded-full text-sm font-bold ${
-                  processo.canal === "VERDE" ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"
-                }`}
+                className={`inline-flex items-center px-4 py-1.5 rounded-full text-sm font-bold ${canalBadgeClassName(processo.canal)}`}
               >
-                {canalLabel}
+                {canalDisplay}
               </span>
               <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-secondary text-foreground">
                 {statusLabel}

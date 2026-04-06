@@ -32,6 +32,7 @@ import {
   formatDecimalPtBr,
   formatIntegerPtBr,
 } from "@/lib/format-display"
+import { canalBadgeClassName, canalDotClassName } from "@/lib/canal-display"
 
 interface ProcessTableProps {
   companyName: string
@@ -130,6 +131,14 @@ export function ProcessTable({
     [processos]
   )
 
+  const uniqueCanals = useMemo(
+    () =>
+      [...new Set(processos.map((p) => String(p.canal ?? "").trim()).filter(Boolean))].sort((a, b) =>
+        a.localeCompare(b, "pt-BR")
+      ),
+    [processos]
+  )
+
   // Filtered data
   const filteredData = useMemo(() => {
     let data = [...processos]
@@ -147,9 +156,9 @@ export function ProcessTable({
       )
     }
 
-    // Canal filter
+    // Canal filter (valor exato de NM_CANAL após trim)
     if (canalFilter !== "all") {
-      data = data.filter((p) => p.canal === canalFilter)
+      data = data.filter((p) => String(p.canal ?? "").trim() === canalFilter)
     }
 
     // Local filter
@@ -184,12 +193,16 @@ export function ProcessTable({
     return filteredData.slice(start, start + itemsPerPage)
   }, [filteredData, currentPage, itemsPerPage])
 
-  // Summary counts from original data
-  const greenCount = processos.filter((p) => p.canal === "VERDE").length
-  const redCount = processos.filter((p) => p.canal === "VERMELHO").length
   const total = processos.length
-  const greenPercent = total > 0 ? ((greenCount / total) * 100).toFixed(1) : "0"
-  const redPercent = total > 0 ? ((redCount / total) * 100).toFixed(1) : "0"
+
+  const canalStats = useMemo(() => {
+    const m = new Map<string, number>()
+    for (const p of processos) {
+      const key = String(p.canal ?? "").trim() || "—"
+      m.set(key, (m.get(key) ?? 0) + 1)
+    }
+    return [...m.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "pt-BR"))
+  }, [processos])
 
   // Reset page on filter change
   const handleSearchChange = (val: string) => {
@@ -303,44 +316,27 @@ export function ProcessTable({
             </p>
           </div>
 
-          <div className="flex items-center gap-6">
-            {/* Stats */}
-            <div className="flex items-center gap-4">
-              <div className="text-center">
-                <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block" />
-                  <span className="text-2xl font-bold text-foreground">{greenCount}</span>
-                </div>
-                <span className="text-xs text-muted-foreground">Verde ({greenPercent}%)</span>
-              </div>
-              <div className="w-px h-10 bg-border" />
-              <div className="text-center">
-                <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-red-500 inline-block" />
-                  <span className="text-2xl font-bold text-foreground">{redCount}</span>
-                </div>
-                <span className="text-xs text-muted-foreground">Vermelho ({redPercent}%)</span>
-              </div>
-              <div className="w-px h-10 bg-border" />
-              <div className="text-center">
-                <span className="text-2xl font-bold text-foreground">{total}</span>
+          <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-4 lg:gap-6">
+            <div className="flex flex-wrap items-center justify-end gap-3 lg:gap-4">
+              {canalStats.map(([label, count]) => {
+                const pct = total > 0 ? ((count / total) * 100).toFixed(1) : "0"
+                return (
+                  <div key={label} className="text-center min-w-[4.5rem] max-w-[9rem]">
+                    <div className="flex items-center gap-1.5 justify-center">
+                      <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${canalDotClassName(label)}`} />
+                      <span className="text-xl font-bold text-foreground tabular-nums">{count}</span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground leading-snug line-clamp-2 mt-0.5" title={label}>
+                      {label}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground/80">({pct}%)</p>
+                  </div>
+                )
+              })}
+              <div className="w-px h-10 bg-border hidden sm:block self-center" />
+              <div className="text-center min-w-[3.5rem]">
+                <span className="text-2xl font-bold text-foreground tabular-nums">{total}</span>
                 <p className="text-xs text-muted-foreground">Total</p>
-              </div>
-            </div>
-
-            {/* Progress bar */}
-            <div className="hidden lg:flex flex-col gap-1 min-w-[120px]">
-              <div className="h-2 rounded-full bg-secondary overflow-hidden">
-                <div
-                  className="h-full bg-emerald-500 rounded-full transition-all"
-                  style={{ width: `${greenPercent}%` }}
-                />
-              </div>
-              <div className="h-2 rounded-full bg-secondary overflow-hidden">
-                <div
-                  className="h-full bg-red-500 rounded-full transition-all"
-                  style={{ width: `${Math.max(Number(redPercent), 2)}%` }}
-                />
               </div>
             </div>
           </div>
@@ -404,13 +400,16 @@ export function ProcessTable({
             <div>
               <Label className="text-xs text-muted-foreground mb-1 block">Canal</Label>
               <Select value={canalFilter} onValueChange={(v) => { setCanalFilter(v); setCurrentPage(1) }}>
-                <SelectTrigger className="w-[140px] h-9">
-                  <SelectValue />
+                <SelectTrigger className="w-[min(100%,280px)] min-w-[160px] h-9">
+                  <SelectValue placeholder="Canal" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="VERDE">Verde</SelectItem>
-                  <SelectItem value="VERMELHO">Vermelho</SelectItem>
+                  <SelectItem value="all">Todos os canais</SelectItem>
+                  {uniqueCanals.map((c) => (
+                    <SelectItem key={c} value={c}>
+                      {c}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -495,16 +494,14 @@ export function ProcessTable({
 
                         // Canal badge
                         if (col.key === "canal") {
+                          const raw = String(val ?? "").trim() || "—"
                           return (
-                            <td key={col.key} className="px-3 py-2.5">
+                            <td key={col.key} className="px-3 py-2.5 max-w-[14rem]">
                               <span
-                                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                                  val === "VERDE"
-                                    ? "bg-emerald-100 text-emerald-800"
-                                    : "bg-red-100 text-red-800"
-                                }`}
+                                className={`inline-flex items-center max-w-full px-2.5 py-0.5 rounded-full text-xs font-semibold break-words ${canalBadgeClassName(raw)}`}
+                                title={raw}
                               >
-                                {val === "VERDE" ? "Verde" : "Vermelho"}
+                                {raw}
                               </span>
                             </td>
                           )

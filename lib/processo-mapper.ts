@@ -30,8 +30,7 @@ export function mapRowToProcesso(row: any): Processo {
   const cdProcesso = pick("CD_PROCESSO", "CODIGO_PROCESSO", "cd_processo", "id")
   const noProcessoRaw = pick("CD_PROCESSO", "CODIGO_PROCESSO", "NO_PROCESSO", "noProcesso", "NR_PROCESSO")
 
-  const nmCanal = trimStr(pick("NM_CANAL", "CANAL", "canal")).toUpperCase().replace(/\s+/g, "")
-  const canal: "VERDE" | "VERMELHO" = nmCanal.includes("VERMELH") ? "VERMELHO" : "VERDE"
+  const canal = trimStr(pick("NM_CANAL", "CANAL", "canal")) || "—"
 
   const dtRegistro = pick("DT_REGISTRO", "DATA_DA_DI", "DATA_REGISTRO")
   const dtChegadaRaw = pick("DT_CHEGADA", "DATA_CHEGADA", "dataChegada")

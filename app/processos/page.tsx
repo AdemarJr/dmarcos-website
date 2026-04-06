@@ -44,9 +44,7 @@ function mapRowToProcesso(row: any): Processo {
 
   return {
     id: toString(cdProcesso || noProcessoRaw || pick("NR_DI_DUIMP", "NUMERO_DI") || crypto.randomUUID()),
-    canal: (toString(pick("NM_CANAL", "CANAL", "canal")).toUpperCase() === "VERMELHO" ? "VERMELHO" : "VERDE") as
-      | "VERDE"
-      | "VERMELHO",
+    canal: toString(pick("NM_CANAL", "CANAL", "canal")).trim() || "—",
     noProcesso: toNumber(noProcessoRaw, 0),
     embarque: toString(pick("IDT_EMBARQUE", "EMBARQUE", "embarque")),
     dataAbertura: toString(pick("DT_REGISTRO", "DATA_ABERTURA", "dataAbertura")),
