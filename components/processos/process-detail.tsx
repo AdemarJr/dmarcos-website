@@ -185,7 +185,7 @@ export function ProcessDetail({ processo, companyName, onClose, closeLabel = "No
 
         <Card>
           <CardHeader className="pb-3 pt-5 px-5">
-            <SectionTitle icon={<Scale className="w-4 h-4" />} title="Impostos (devido / recolher / pago)" />
+            <SectionTitle icon={<Scale className="w-4 h-4" />} title="Impostos (devido / taxas a recolher / pago)" />
           </CardHeader>
           <CardContent className="px-5 pb-5">
             <DetailField label="II devido" value={processo.vlIiDevido ?? ""} format="brl" />
@@ -193,10 +193,6 @@ export function ProcessDetail({ processo, companyName, onClose, closeLabel = "No
             <DetailField label="PIS devido" value={processo.vlPisDevido ?? ""} format="brl" />
             <DetailField label="COFINS devido" value={processo.vlCofinsDevido ?? ""} format="brl" />
             <DetailField label="Taxas a recolher" value={processo.vlTaxasRecolher ?? ""} format="brl" />
-            <DetailField label="II recolher" value={processo.vlIiRecolher ?? ""} format="brl" />
-            <DetailField label="IPI recolher" value={processo.vlIpiRecolher ?? ""} format="brl" />
-            <DetailField label="PIS recolher" value={processo.vlPisRecolher ?? ""} format="brl" />
-            <DetailField label="COFINS recolher" value={processo.vlCofinsRecolher ?? ""} format="brl" />
             <DetailField label="II pago" value={processo.iiPg} format="brl" />
             <DetailField label="IPI pago" value={processo.ipiPg} format="brl" />
             <DetailField label="PIS pago" value={processo.pisPg} format="brl" />
