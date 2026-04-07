@@ -106,14 +106,10 @@ export default function ProcessosPage() {
         <CardHeader className="pb-4 border-b">
           <CardTitle className="text-lg flex items-center gap-2">
             <FileSearch className="w-5 h-5 text-accent" />
-            Buscar processo
+            Buscar por Processos
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            Escolha o tipo de busca ou &quot;Automático&quot;. Exemplos: código{" "}
-            <span className="font-mono text-foreground/90">365310</span>, DI{" "}
-            <span className="font-mono text-foreground/90">26/0497547-4</span>, embarque{" "}
-            <span className="font-mono text-foreground/90">IMP-AM-26-0108</span>, HAWB/BL{" "}
-            <span className="font-mono text-foreground/90">72994232191</span>.
+            Digite o Número de Processos, Di-Duimp, Embarque e Conhecimento.
           </p>
         </CardHeader>
         <CardContent className="pt-4">
@@ -144,7 +140,7 @@ export default function ProcessosPage() {
                   value={nrProcesso}
                   autoComplete="off"
                   onChange={(e) => setNrProcesso(e.target.value)}
-                  placeholder="Código, DI, embarque ou HAWB/BL"
+                  placeholder="Número de Processos, Di-Duimp, Embarque e Conhecimento"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") buscarPorNumero()
                   }}
