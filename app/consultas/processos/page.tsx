@@ -7,11 +7,30 @@ import { ProcessDetail } from "@/components/processos/process-detail"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { readClienteSession, readToken, clearSession } from "@/lib/client-session"
 import { mapRowToProcesso } from "@/lib/processo-mapper"
 import { backendUrl } from "@/lib/backend-api-url"
-import { digitsOnly } from "@/lib/format-display"
+import {
+  type ProcessoBuscaCampo,
+  resolverCampoETermo,
+} from "@/lib/processo-search"
 import { FileSearch } from "lucide-react"
+
+const BUSCA_CAMPO_LABEL: Record<ProcessoBuscaCampo, string> = {
+  AUTO: "Automático",
+  CD_PROCESSO: "Código do processo",
+  NR_DI_DUIMP: "Número DI / DUIMP",
+  IDT_EMBARQUE: "ID embarque",
+  HAWB_BL: "HAWB / BL",
+}
 
 export default function ProcessosPage() {
   const router = useRouter()
@@ -20,6 +39,7 @@ export default function ProcessosPage() {
   const companyName = cliente?.nomeEmpresa?.trim() || "Cliente"
 
   const [nrProcesso, setNrProcesso] = useState("")
+  const [tipoBusca, setTipoBusca] = useState<ProcessoBuscaCampo>("AUTO")
   const [buscaLoading, setBuscaLoading] = useState(false)
   const [buscaError, setBuscaError] = useState<string | null>(null)
   const [processoBusca, setProcessoBusca] = useState<Processo | null>(null)
@@ -42,18 +62,23 @@ export default function ProcessosPage() {
       router.push("/")
       return
     }
-    const id = digitsOnly(nrProcesso)
-    if (!id) {
-      setBuscaError("Informe o número do processo.")
+    const { campo, termo } = resolverCampoETermo(tipoBusca, nrProcesso)
+    if (!termo) {
+      setBuscaError("Informe um valor para buscar.")
       return
     }
     setBuscaLoading(true)
     setBuscaError(null)
     setProcessoBusca(null)
     try {
-      const res = await fetch(backendUrl(`/api/consultas/detalhes/${encodeURIComponent(id)}`), {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      const qs = new URLSearchParams()
+      qs.set("tipo_busca", campo)
+      const res = await fetch(
+        backendUrl(`/api/consultas/detalhes/${encodeURIComponent(termo)}?${qs.toString()}`),
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
       if (res.status === 401) {
         clearSession()
         router.push("/")
@@ -81,27 +106,56 @@ export default function ProcessosPage() {
         <CardHeader className="pb-4 border-b">
           <CardTitle className="text-lg flex items-center gap-2">
             <FileSearch className="w-5 h-5 text-accent" />
-            Buscar por Número de Processos, Di-Duimp, Embarque e Conhecimento
+            Buscar processo
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            Digite o número do processo (apenas algarismos; pontos, barras e outros símbolos são ignorados).
+            Escolha o tipo de busca ou &quot;Automático&quot;. Exemplos: código{" "}
+            <span className="font-mono text-foreground/90">365310</span>, DI{" "}
+            <span className="font-mono text-foreground/90">26/0497547-4</span>, embarque{" "}
+            <span className="font-mono text-foreground/90">IMP-AM-26-0108</span>, HAWB/BL{" "}
+            <span className="font-mono text-foreground/90">72994232191</span>.
           </p>
         </CardHeader>
         <CardContent className="pt-4">
-          <div className="flex flex-col sm:flex-row gap-2 max-w-2xl">
-            <Input
-              value={nrProcesso}
-              inputMode="numeric"
-              autoComplete="off"
-              onChange={(e) => setNrProcesso(digitsOnly(e.target.value))}
-              placeholder="Digite o número do processo, Di-Duimp, Embarque e Conhecimento"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") buscarPorNumero()
-              }}
-            />
-            <Button type="button" onClick={buscarPorNumero} disabled={buscaLoading}>
-              {buscaLoading ? "Buscando..." : "Buscar"}
-            </Button>
+          <div className="flex flex-col gap-4 max-w-2xl">
+            <div className="grid gap-2 sm:max-w-xs">
+              <Label htmlFor="tipo-busca-processo">Tipo de busca</Label>
+              <Select
+                value={tipoBusca}
+                onValueChange={(v) => setTipoBusca(v as ProcessoBuscaCampo)}
+              >
+                <SelectTrigger id="tipo-busca-processo" className="w-full">
+                  <SelectValue placeholder="Tipo" />
+                </SelectTrigger>
+                <SelectContent>
+                  {(Object.keys(BUSCA_CAMPO_LABEL) as ProcessoBuscaCampo[]).map((k) => (
+                    <SelectItem key={k} value={k}>
+                      {BUSCA_CAMPO_LABEL[k]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <div className="grid gap-2 flex-1">
+                <Label htmlFor="valor-busca-processo">Valor</Label>
+                <Input
+                  id="valor-busca-processo"
+                  value={nrProcesso}
+                  autoComplete="off"
+                  onChange={(e) => setNrProcesso(e.target.value)}
+                  placeholder="Código, DI, embarque ou HAWB/BL"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") buscarPorNumero()
+                  }}
+                />
+              </div>
+              <div className="flex items-end">
+                <Button type="button" onClick={buscarPorNumero} disabled={buscaLoading} className="w-full sm:w-auto">
+                  {buscaLoading ? "Buscando..." : "Buscar"}
+                </Button>
+              </div>
+            </div>
           </div>
           {buscaError && <p className="text-sm text-red-500 mt-2">{buscaError}</p>}
         </CardContent>
