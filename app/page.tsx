@@ -22,7 +22,7 @@ export default function Home() {
   const img = {
     teatroAmazonas: "/images/imagens-aereas-do-teatro-amazonas-em-4k-uhd.jpg",
     desembaraco: "/images/desembaraco-aduaneiro-capa.jpg",
-    porto: "/images/port-workers-cargo.png",
+    porto: "/images/port-workers-cargo.jpg",
     aviao: "/images/transporte-aduaneiro-aviao.jpeg",
     armazenamento: "/images/aduana-amazenamento.jpeg",
     galeria1: "/images/images01.jpeg",
@@ -114,9 +114,13 @@ export default function Home() {
               {/* Localização */}
               <div className="group relative rounded-2xl bg-card border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                 <div className="h-48 overflow-hidden">
-                  <img 
-                    src={assetUrl(img.teatroAmazonas)} 
-                    alt="Teatro Amazonas - Manaus" 
+                  <img
+                    src={assetUrl(img.teatroAmazonas)}
+                    alt="Teatro Amazonas - Manaus"
+                    width={1200}
+                    height={675}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
@@ -134,9 +138,13 @@ export default function Home() {
               {/* Estrutura */}
               <div className="group relative rounded-2xl bg-card border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                 <div className="h-48 overflow-hidden">
-                  <img 
-                    src={assetUrl(img.galeria1)} 
-                    alt="Estrutura e operação" 
+                  <img
+                    src={assetUrl(img.galeria1)}
+                    alt="Estrutura e operação"
+                    width={800}
+                    height={600}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
@@ -154,9 +162,13 @@ export default function Home() {
               {/* Compromisso */}
               <div className="group relative rounded-2xl bg-card border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                 <div className="h-48 overflow-hidden">
-                  <img 
-                    src={assetUrl(img.porto)} 
-                    alt="Acompanhamento em portos e terminais" 
+                  <img
+                    src={assetUrl(img.porto)}
+                    alt="Acompanhamento em portos e terminais"
+                    width={996}
+                    height={664}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
@@ -174,9 +186,13 @@ export default function Home() {
               {/* Diferencial */}
               <div className="group relative rounded-2xl bg-card border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
                 <div className="h-48 overflow-hidden">
-                  <img 
-                    src={assetUrl(img.galeria2)} 
-                    alt="Parceria e assessoria empresarial" 
+                  <img
+                    src={assetUrl(img.galeria2)}
+                    alt="Parceria e assessoria empresarial"
+                    width={800}
+                    height={600}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
@@ -205,7 +221,7 @@ export default function Home() {
             <Collapsible>
               <CollapsibleTrigger className="w-full flex items-center gap-4 p-6 rounded-lg border bg-card hover:bg-secondary/50 transition-colors group">
                 <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
-                  <img src={assetUrl(img.desembaraco)} alt="" className="w-8 h-8 object-cover rounded" />
+                  <img src={assetUrl(img.desembaraco)} alt="" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-cover rounded" />
                 </div>
                 <div className="flex-1 text-left">
                   <h3 className="font-semibold text-foreground text-lg">IMPORTAÇÃO | Diferencial é a palavra-chave</h3>
@@ -234,7 +250,7 @@ export default function Home() {
             <Collapsible>
               <CollapsibleTrigger className="w-full flex items-center gap-4 p-6 rounded-lg border bg-card hover:bg-secondary/50 transition-colors group">
                 <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
-                  <img src={assetUrl(img.aviao)} alt="" className="w-8 h-8 object-cover rounded" />
+                  <img src={assetUrl(img.aviao)} alt="" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-cover rounded" />
                 </div>
                 <div className="flex-1 text-left">
                   <h3 className="font-semibold text-foreground text-lg">EXPORTAÇÃO | Atendimento 24h</h3>
@@ -261,7 +277,7 @@ export default function Home() {
             <Collapsible>
               <CollapsibleTrigger className="w-full flex items-center gap-4 p-6 rounded-lg border bg-card hover:bg-secondary/50 transition-colors group">
                 <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
-                  <img src={assetUrl(img.armazenamento)} alt="" className="w-8 h-8 object-cover rounded" />
+                  <img src={assetUrl(img.armazenamento)} alt="" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-cover rounded" />
                 </div>
                 <div className="flex-1 text-left">
                   <h3 className="font-semibold text-foreground text-lg">AG. DE CARGA | Solução do início ao fim</h3>
@@ -291,7 +307,7 @@ export default function Home() {
             <Collapsible>
               <CollapsibleTrigger className="w-full flex items-center gap-4 p-6 rounded-lg border bg-card hover:bg-secondary/50 transition-colors group">
                 <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
-                  <img src={assetUrl(img.galeria3)} alt="" className="w-8 h-8 object-cover rounded" />
+                  <img src={assetUrl(img.galeria3)} alt="" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-cover rounded" />
                 </div>
                 <div className="flex-1 text-left">
                   <h3 className="font-semibold text-foreground text-lg">INTERNAÇÃO | Experiência e envolvimento</h3>
@@ -318,7 +334,7 @@ export default function Home() {
             <Collapsible>
               <CollapsibleTrigger className="w-full flex items-center gap-4 p-6 rounded-lg border bg-card hover:bg-secondary/50 transition-colors group">
                 <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
-                  <img src={assetUrl(img.galeria1)} alt="" className="w-8 h-8 object-cover rounded" />
+                  <img src={assetUrl(img.galeria1)} alt="" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-cover rounded" />
                 </div>
                 <div className="flex-1 text-left">
                   <h3 className="font-semibold text-foreground text-lg">CONSULTORIA TÉCNICA E CLASSIFICAÇÃO FISCAL</h3>

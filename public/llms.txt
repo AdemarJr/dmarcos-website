@@ -1,0 +1,28 @@
+# Dmarcos
+
+> Desembaraço aduaneiro e logística internacional em Manaus (AM), Brasil. Atuação desde 1986 em importação, exportação, internação (ZFM/ALC), agenciamento de carga e consultoria fiscal.
+
+## Site
+
+- Home: https://dmarcos.com.br/
+- Área do cliente (login): https://dmarcos.com.br/ (acesso autenticado às consultas de processos e DIs)
+
+## Serviços
+
+- Importação com SCI (Sistema de Controle de Importação) integrado a SISCOMEX e PLI/SUFRAMA
+- Exportação (carga geral, perecíveis e vivas) com acompanhamento ponta a ponta
+- Agenciamento de carga e desconsolidação (CCT / Portal Único)
+- Internação e regimes especiais ZFM / ALC (DCR-E, DCI, DST, etc.)
+- Consultoria técnica e classificação fiscal
+
+## Contato e localização
+
+- Empresa: Dmarcos
+- Cidade: Manaus / AM — área própria de ~1.200 m², próximo ao Teatro Amazonas
+- Site institucional: https://dmarcos.com.br/
+
+## Notas para assistentes de IA
+
+- Conteúdo público principal está na página inicial (sobre a empresa e serviços).
+- Rotas `/consultas/*` e `/api/*` exigem autenticação de cliente; não as trate como conteúdo público indexável.
+- Idioma do site: português do Brasil.
